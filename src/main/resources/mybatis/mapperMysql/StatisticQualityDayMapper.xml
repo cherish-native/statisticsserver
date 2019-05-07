@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.egf.statisticsserver.dao.mapperMysql.StatisticQualityDayMapper" >
+  <resultMap id="BaseResultMap" type="com.egf.statisticsserver.model.mysql.StatisticQualityDay" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="depart_code" property="departCode" jdbcType="VARCHAR" />
+    <result column="depart_name" property="departName" jdbcType="VARCHAR" />
+    <result column="gatheruser_name" property="gatheruserName" jdbcType="VARCHAR" />
+    <result column="gatheruser_id" property="gatheruserId" jdbcType="VARCHAR" />
+    <result column="statistic_time" property="statisticTime" jdbcType="INTEGER" />
+    <result column="count_level_a" property="countLevelA" jdbcType="INTEGER" />
+    <result column="count_level_b" property="countLevelB" jdbcType="INTEGER" />
+    <result column="count_level_c" property="countLevelC" jdbcType="INTEGER" />
+    <result column="count_level_d" property="countLevelD" jdbcType="INTEGER" />
+    <result column="count_level_e" property="countLevelE" jdbcType="INTEGER" />
+    <result column="is_compel_pass_count" property="isCompelPassCount" jdbcType="INTEGER" />
+    <result column="un_compel_pass_count" property="unCompelPassCount" jdbcType="INTEGER" />
+    <result column="count" property="count" jdbcType="INTEGER" />
+    <result column="score_average" property="scoreAverage" jdbcType="REAL" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, depart_code, depart_name, gatheruser_name, gatheruser_id, statistic_time, count_level_a, 
+    count_level_b, count_level_c, count_level_d, count_level_e, is_compel_pass_count, 
+    un_compel_pass_count, count, score_average
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from statistic_quality_day
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="getStatisticQualityDay" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from statistic_quality_day
+    where gatheruser_id = #{gatherUserId}
+    and depart_code = #{departCode}
+    and statistic_time = #{date}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from statistic_quality_day
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.egf.statisticsserver.model.mysql.StatisticQualityDay" >
+    insert into statistic_quality_day (id, depart_code, depart_name, 
+      gatheruser_name, gatheruser_id, statistic_time, 
+      count_level_a, count_level_b, count_level_c, 
+      count_level_d, count_level_e, is_compel_pass_count, 
+      un_compel_pass_count, count, score_average
+      )
+    values (#{id,jdbcType=VARCHAR}, #{departCode,jdbcType=VARCHAR}, #{departName,jdbcType=VARCHAR}, 
+      #{gatheruserName,jdbcType=VARCHAR}, #{gatheruserId,jdbcType=VARCHAR}, #{statisticTime,jdbcType=INTEGER}, 
+      #{countLevelA,jdbcType=INTEGER}, #{countLevelB,jdbcType=INTEGER}, #{countLevelC,jdbcType=INTEGER}, 
+      #{countLevelD,jdbcType=INTEGER}, #{countLevelE,jdbcType=INTEGER}, #{isCompelPassCount,jdbcType=INTEGER}, 
+      #{unCompelPassCount,jdbcType=INTEGER}, #{count,jdbcType=INTEGER}, #{scoreAverage,jdbcType=REAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.egf.statisticsserver.model.mysql.StatisticQualityDay" >
+    insert into statistic_quality_day
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="departCode != null" >
+        depart_code,
+      </if>
+      <if test="departName != null" >
+        depart_name,
+      </if>
+      <if test="gatheruserName != null" >
+        gatheruser_name,
+      </if>
+      <if test="gatheruserId != null" >
+        gatheruser_id,
+      </if>
+      <if test="statisticTime != null" >
+        statistic_time,
+      </if>
+      <if test="countLevelA != null" >
+        count_level_a,
+      </if>
+      <if test="countLevelB != null" >
+        count_level_b,
+      </if>
+      <if test="countLevelC != null" >
+        count_level_c,
+      </if>
+      <if test="countLevelD != null" >
+        count_level_d,
+      </if>
+      <if test="countLevelE != null" >
+        count_level_e,
+      </if>
+      <if test="isCompelPassCount != null" >
+        is_compel_pass_count,
+      </if>
+      <if test="unCompelPassCount != null" >
+        un_compel_pass_count,
+      </if>
+      <if test="count != null" >
+        count,
+      </if>
+      <if test="scoreAverage != null" >
+        score_average,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="departCode != null" >
+        #{departCode,jdbcType=VARCHAR},
+      </if>
+      <if test="departName != null" >
+        #{departName,jdbcType=VARCHAR},
+      </if>
+      <if test="gatheruserName != null" >
+        #{gatheruserName,jdbcType=VARCHAR},
+      </if>
+      <if test="gatheruserId != null" >
+        #{gatheruserId,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticTime != null" >
+        #{statisticTime,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelA != null" >
+        #{countLevelA,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelB != null" >
+        #{countLevelB,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelC != null" >
+        #{countLevelC,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelD != null" >
+        #{countLevelD,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelE != null" >
+        #{countLevelE,jdbcType=INTEGER},
+      </if>
+      <if test="isCompelPassCount != null" >
+        #{isCompelPassCount,jdbcType=INTEGER},
+      </if>
+      <if test="unCompelPassCount != null" >
+        #{unCompelPassCount,jdbcType=INTEGER},
+      </if>
+      <if test="count != null" >
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="scoreAverage != null" >
+        #{scoreAverage,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.egf.statisticsserver.model.mysql.StatisticQualityDay" >
+    update statistic_quality_day
+    <set >
+      <if test="departCode != null" >
+        depart_code = #{departCode,jdbcType=VARCHAR},
+      </if>
+      <if test="departName != null" >
+        depart_name = #{departName,jdbcType=VARCHAR},
+      </if>
+      <if test="gatheruserName != null" >
+        gatheruser_name = #{gatheruserName,jdbcType=VARCHAR},
+      </if>
+      <if test="gatheruserId != null" >
+        gatheruser_id = #{gatheruserId,jdbcType=VARCHAR},
+      </if>
+      <if test="statisticTime != null" >
+        statistic_time = #{statisticTime,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelA != null" >
+        count_level_a = #{countLevelA,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelB != null" >
+        count_level_b = #{countLevelB,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelC != null" >
+        count_level_c = #{countLevelC,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelD != null" >
+        count_level_d = #{countLevelD,jdbcType=INTEGER},
+      </if>
+      <if test="countLevelE != null" >
+        count_level_e = #{countLevelE,jdbcType=INTEGER},
+      </if>
+      <if test="isCompelPassCount != null" >
+        is_compel_pass_count = #{isCompelPassCount,jdbcType=INTEGER},
+      </if>
+      <if test="unCompelPassCount != null" >
+        un_compel_pass_count = #{unCompelPassCount,jdbcType=INTEGER},
+      </if>
+      <if test="count != null" >
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="scoreAverage != null" >
+        score_average = #{scoreAverage,jdbcType=REAL},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.egf.statisticsserver.model.mysql.StatisticQualityDay" >
+    update statistic_quality_day
+    set depart_code = #{departCode,jdbcType=VARCHAR},
+      depart_name = #{departName,jdbcType=VARCHAR},
+      gatheruser_name = #{gatheruserName,jdbcType=VARCHAR},
+      gatheruser_id = #{gatheruserId,jdbcType=VARCHAR},
+      statistic_time = #{statisticTime,jdbcType=INTEGER},
+      count_level_a = #{countLevelA,jdbcType=INTEGER},
+      count_level_b = #{countLevelB,jdbcType=INTEGER},
+      count_level_c = #{countLevelC,jdbcType=INTEGER},
+      count_level_d = #{countLevelD,jdbcType=INTEGER},
+      count_level_e = #{countLevelE,jdbcType=INTEGER},
+      is_compel_pass_count = #{isCompelPassCount,jdbcType=INTEGER},
+      un_compel_pass_count = #{unCompelPassCount,jdbcType=INTEGER},
+      count = #{count,jdbcType=INTEGER},
+      score_average = #{scoreAverage,jdbcType=REAL}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

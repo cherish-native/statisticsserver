@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.egf.statisticsserver.dao.mapperOracle.QualityScoreMapper" >
+  <resultMap id="BaseResultMap" type="com.egf.statisticsserver.model.oracle.QualityScore" >
+    <result column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="CARDID" property="cardid" jdbcType="VARCHAR" />
+    <result column="RMP" property="rmp" jdbcType="DECIMAL" />
+    <result column="RSP" property="rsp" jdbcType="DECIMAL" />
+    <result column="RZP" property="rzp" jdbcType="DECIMAL" />
+    <result column="RHP" property="rhp" jdbcType="DECIMAL" />
+    <result column="RXP" property="rxp" jdbcType="DECIMAL" />
+    <result column="LMP" property="lmp" jdbcType="DECIMAL" />
+    <result column="LSP" property="lsp" jdbcType="DECIMAL" />
+    <result column="LZP" property="lzp" jdbcType="DECIMAL" />
+    <result column="LHP" property="lhp" jdbcType="DECIMAL" />
+    <result column="LXP" property="lxp" jdbcType="DECIMAL" />
+    <result column="RMR" property="rmr" jdbcType="DECIMAL" />
+    <result column="RSR" property="rsr" jdbcType="DECIMAL" />
+    <result column="RZR" property="rzr" jdbcType="DECIMAL" />
+    <result column="RHR" property="rhr" jdbcType="DECIMAL" />
+    <result column="RXR" property="rxr" jdbcType="DECIMAL" />
+    <result column="LMR" property="lmr" jdbcType="DECIMAL" />
+    <result column="LSR" property="lsr" jdbcType="DECIMAL" />
+    <result column="LZR" property="lzr" jdbcType="DECIMAL" />
+    <result column="LHR" property="lhr" jdbcType="DECIMAL" />
+    <result column="LXR" property="lxr" jdbcType="DECIMAL" />
+    <result column="TOTAL_SCORE" property="totalScore" jdbcType="DECIMAL" />
+  </resultMap>
+  <insert id="insert" parameterType="com.egf.statisticsserver.model.oracle.QualityScore" >
+    insert into QUALITY_SCORE (ID, CARDID, RMP, 
+      RSP, RZP, RHP, RXP, 
+      LMP, LSP, LZP, LHP, 
+      LXP, RMR, RSR, RZR, 
+      RHR, RXR, LMR, LSR, 
+      LZR, LHR, LXR, TOTAL_SCORE
+      )
+    values (#{id,jdbcType=VARCHAR}, #{cardid,jdbcType=VARCHAR}, #{rmp,jdbcType=DECIMAL}, 
+      #{rsp,jdbcType=DECIMAL}, #{rzp,jdbcType=DECIMAL}, #{rhp,jdbcType=DECIMAL}, #{rxp,jdbcType=DECIMAL}, 
+      #{lmp,jdbcType=DECIMAL}, #{lsp,jdbcType=DECIMAL}, #{lzp,jdbcType=DECIMAL}, #{lhp,jdbcType=DECIMAL}, 
+      #{lxp,jdbcType=DECIMAL}, #{rmr,jdbcType=DECIMAL}, #{rsr,jdbcType=DECIMAL}, #{rzr,jdbcType=DECIMAL}, 
+      #{rhr,jdbcType=DECIMAL}, #{rxr,jdbcType=DECIMAL}, #{lmr,jdbcType=DECIMAL}, #{lsr,jdbcType=DECIMAL}, 
+      #{lzr,jdbcType=DECIMAL}, #{lhr,jdbcType=DECIMAL}, #{lxr,jdbcType=DECIMAL}, #{totalScore,jdbcType=DECIMAL}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.egf.statisticsserver.model.oracle.QualityScore" >
+    insert into QUALITY_SCORE
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="cardid != null" >
+        CARDID,
+      </if>
+      <if test="rmp != null" >
+        RMP,
+      </if>
+      <if test="rsp != null" >
+        RSP,
+      </if>
+      <if test="rzp != null" >
+        RZP,
+      </if>
+      <if test="rhp != null" >
+        RHP,
+      </if>
+      <if test="rxp != null" >
+        RXP,
+      </if>
+      <if test="lmp != null" >
+        LMP,
+      </if>
+      <if test="lsp != null" >
+        LSP,
+      </if>
+      <if test="lzp != null" >
+        LZP,
+      </if>
+      <if test="lhp != null" >
+        LHP,
+      </if>
+      <if test="lxp != null" >
+        LXP,
+      </if>
+      <if test="rmr != null" >
+        RMR,
+      </if>
+      <if test="rsr != null" >
+        RSR,
+      </if>
+      <if test="rzr != null" >
+        RZR,
+      </if>
+      <if test="rhr != null" >
+        RHR,
+      </if>
+      <if test="rxr != null" >
+        RXR,
+      </if>
+      <if test="lmr != null" >
+        LMR,
+      </if>
+      <if test="lsr != null" >
+        LSR,
+      </if>
+      <if test="lzr != null" >
+        LZR,
+      </if>
+      <if test="lhr != null" >
+        LHR,
+      </if>
+      <if test="lxr != null" >
+        LXR,
+      </if>
+      <if test="totalScore != null" >
+        TOTAL_SCORE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="cardid != null" >
+        #{cardid,jdbcType=VARCHAR},
+      </if>
+      <if test="rmp != null" >
+        #{rmp,jdbcType=DECIMAL},
+      </if>
+      <if test="rsp != null" >
+        #{rsp,jdbcType=DECIMAL},
+      </if>
+      <if test="rzp != null" >
+        #{rzp,jdbcType=DECIMAL},
+      </if>
+      <if test="rhp != null" >
+        #{rhp,jdbcType=DECIMAL},
+      </if>
+      <if test="rxp != null" >
+        #{rxp,jdbcType=DECIMAL},
+      </if>
+      <if test="lmp != null" >
+        #{lmp,jdbcType=DECIMAL},
+      </if>
+      <if test="lsp != null" >
+        #{lsp,jdbcType=DECIMAL},
+      </if>
+      <if test="lzp != null" >
+        #{lzp,jdbcType=DECIMAL},
+      </if>
+      <if test="lhp != null" >
+        #{lhp,jdbcType=DECIMAL},
+      </if>
+      <if test="lxp != null" >
+        #{lxp,jdbcType=DECIMAL},
+      </if>
+      <if test="rmr != null" >
+        #{rmr,jdbcType=DECIMAL},
+      </if>
+      <if test="rsr != null" >
+        #{rsr,jdbcType=DECIMAL},
+      </if>
+      <if test="rzr != null" >
+        #{rzr,jdbcType=DECIMAL},
+      </if>
+      <if test="rhr != null" >
+        #{rhr,jdbcType=DECIMAL},
+      </if>
+      <if test="rxr != null" >
+        #{rxr,jdbcType=DECIMAL},
+      </if>
+      <if test="lmr != null" >
+        #{lmr,jdbcType=DECIMAL},
+      </if>
+      <if test="lsr != null" >
+        #{lsr,jdbcType=DECIMAL},
+      </if>
+      <if test="lzr != null" >
+        #{lzr,jdbcType=DECIMAL},
+      </if>
+      <if test="lhr != null" >
+        #{lhr,jdbcType=DECIMAL},
+      </if>
+      <if test="lxr != null" >
+        #{lxr,jdbcType=DECIMAL},
+      </if>
+      <if test="totalScore != null" >
+        #{totalScore,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+</mapper>

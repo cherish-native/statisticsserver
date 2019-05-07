@@ -1,0 +1,21 @@
+#数据源配置Oracle
+datasourceOracle:
+  url: jdbc:oracle:thin:@192.168.1.214:1521:oragafis
+  username: afis
+  password: helloafis
+  driverClassName: oracle.jdbc.driver.OracleDriver
+  #mybatis映射文件6.2
+  mapperOracle-locations: classpath:/mybatis/mapperOracle/*.xml
+
+#数据源配置Mysql
+datasourceMysql:
+  url: jdbc:mysql://127.0.0.1:3306/monitor?characterEncoding=utf8
+  username: root
+  password: 111111
+  driverClassName: com.mysql.jdbc.Driver
+  #mybatis映射文件6.2
+  mapperMysql-locations: classpath:/mybatis/mapperMysql/*.xml
+
+logging:
+  level:
+    com.egf.statisticsserver.dao: DEBUG

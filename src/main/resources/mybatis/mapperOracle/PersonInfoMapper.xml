@@ -1,0 +1,632 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.egf.statisticsserver.dao.mapperOracle.PersonInfoMapper" >
+  <resultMap id="BaseResultMap" type="com.egf.statisticsserver.model.oracle.PersonInfo" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="NAME" property="name" jdbcType="VARCHAR" />
+    <result column="ALIASNAME" property="aliasname" jdbcType="VARCHAR" />
+    <result column="SEX" property="sex" jdbcType="VARCHAR" />
+    <result column="BIRTHDAY" property="birthday" jdbcType="VARCHAR" />
+    <result column="IDCARD" property="idcard" jdbcType="VARCHAR" />
+    <result column="BIRTH_ADDRESS_CODE" property="birthAddressCode" jdbcType="VARCHAR" />
+    <result column="BIRTH_ADDRESS" property="birthAddress" jdbcType="VARCHAR" />
+    <result column="ADDRESS_CODE" property="addressCode" jdbcType="VARCHAR" />
+    <result column="ADDRESS" property="address" jdbcType="VARCHAR" />
+    <result column="NATION" property="nation" jdbcType="VARCHAR" />
+    <result column="RACE" property="race" jdbcType="VARCHAR" />
+    <result column="CRIMINAL_RECORD" property="criminalRecord" jdbcType="DECIMAL" />
+    <result column="PERSONID" property="personid" jdbcType="VARCHAR" />
+    <result column="PERSON_TYPE" property="personType" jdbcType="VARCHAR" />
+    <result column="CASE_TYPE1" property="caseType1" jdbcType="VARCHAR" />
+    <result column="CASE_TYPE2" property="caseType2" jdbcType="VARCHAR" />
+    <result column="CASE_TYPE3" property="caseType3" jdbcType="VARCHAR" />
+    <result column="PRINT_UNIT_CODE" property="printUnitCode" jdbcType="VARCHAR" />
+    <result column="PRINT_UNIT_NAME" property="printUnitName" jdbcType="VARCHAR" />
+    <result column="PRINTER" property="printer" jdbcType="VARCHAR" />
+    <result column="PRINTDATE" property="printdate" jdbcType="VARCHAR" />
+    <result column="PRINTER_TEL" property="printerTel" jdbcType="VARCHAR" />
+    <result column="PRINTER_IDCARD" property="printerIdcard" jdbcType="VARCHAR" />
+    <result column="PERSON_LEVEL" property="personLevel" jdbcType="DECIMAL" />
+    <result column="LEVEL_ID" property="levelId" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.egf.statisticsserver.model.oracle.PersonInfoWithBLOBs" extends="BaseResultMap" >
+    <result column="RMP" property="rmp" jdbcType="BLOB" />
+    <result column="RSP" property="rsp" jdbcType="BLOB" />
+    <result column="RZP" property="rzp" jdbcType="BLOB" />
+    <result column="RHP" property="rhp" jdbcType="BLOB" />
+    <result column="RXP" property="rxp" jdbcType="BLOB" />
+    <result column="LMP" property="lmp" jdbcType="BLOB" />
+    <result column="LSP" property="lsp" jdbcType="BLOB" />
+    <result column="LZP" property="lzp" jdbcType="BLOB" />
+    <result column="LHP" property="lhp" jdbcType="BLOB" />
+    <result column="LXP" property="lxp" jdbcType="BLOB" />
+    <result column="RMR" property="rmr" jdbcType="BLOB" />
+    <result column="RSR" property="rsr" jdbcType="BLOB" />
+    <result column="RZR" property="rzr" jdbcType="BLOB" />
+    <result column="RHR" property="rhr" jdbcType="BLOB" />
+    <result column="RXR" property="rxr" jdbcType="BLOB" />
+    <result column="LMR" property="lmr" jdbcType="BLOB" />
+    <result column="LSR" property="lsr" jdbcType="BLOB" />
+    <result column="LZR" property="lzr" jdbcType="BLOB" />
+    <result column="LHR" property="lhr" jdbcType="BLOB" />
+    <result column="LXR" property="lxr" jdbcType="BLOB" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ID, NAME, ALIASNAME, SEX, BIRTHDAY, IDCARD, BIRTH_ADDRESS_CODE, BIRTH_ADDRESS, ADDRESS_CODE, 
+    ADDRESS, NATION, RACE, CRIMINAL_RECORD, PERSONID, PERSON_TYPE, CASE_TYPE1, CASE_TYPE2, 
+    CASE_TYPE3, PRINT_UNIT_CODE, PRINT_UNIT_NAME, PRINTER, PRINTDATE, PRINTER_TEL, PRINTER_IDCARD, 
+    PERSON_LEVEL, LEVEL_ID
+  </sql>
+  <sql id="Blob_Column_List" >
+    RMP, RSP, RZP, RHP, RXP, LMP, LSP, LZP, LHP, LXP, RMR, RSR, RZR, RHR, RXR, LMR, LSR, 
+    LZR, LHR, LXR
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from PERSONINFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="personLevelStatistic" resultType="com.egf.statisticsserver.model.mysql.StatisticQualityDay">
+  select t.PRINT_UNIT_CODE departCode,
+       t.PRINTER gatheruserId,
+       sum(case when t.QUALITY_LEVEL=1 then 1 else 0 end) countLevelA,
+       sum(case when t.QUALITY_LEVEL=2 then 1 else 0 end) countLevelB,
+       sum(case when t.QUALITY_LEVEL=3 then 1 else 0 end) countLevelC,
+       sum(case when t.QUALITY_LEVEL=4 then 1 else 0 end) countLevelD,
+       sum(case when t.QUALITY_LEVEL=5 then 1 else 0 end) countLevelE,
+       sum(case when t.IS_COMPEL_PASS=1 then 1 else 0 end) isCompelPassCount,
+       sum(case when t.IS_COMPEL_PASS=0 then 1 else 0 end) unCompelPassCount,
+       round(avg(t.TOTAL_SCORE), 1) scoreAverage,
+       count(*) count
+    from (select p.PRINT_UNIT_CODE,
+               p.PRINTER,
+               p.IS_COMPEL_PASS,
+               q.TOTAL_SCORE,
+               q.QUALITY_LEVEL
+          from personinfo p
+          left join QUALITY_SCORE q
+            on p.PERSONID = q.CARDID
+         where p.PRINTDATE = #{beginDate}
+         ) t
+    group by t.PRINT_UNIT_CODE, t.PRINTER
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from PERSONINFO
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.egf.statisticsserver.model.oracle.PersonInfoWithBLOBs" >
+    insert into PERSONINFO (ID, NAME, ALIASNAME, 
+      SEX, BIRTHDAY, IDCARD, 
+      BIRTH_ADDRESS_CODE, BIRTH_ADDRESS, ADDRESS_CODE, 
+      ADDRESS, NATION, RACE, 
+      CRIMINAL_RECORD, PERSONID, PERSON_TYPE, 
+      CASE_TYPE1, CASE_TYPE2, CASE_TYPE3, 
+      PRINT_UNIT_CODE, PRINT_UNIT_NAME, PRINTER, 
+      PRINTDATE, PRINTER_TEL, PRINTER_IDCARD, 
+      PERSON_LEVEL, LEVEL_ID, RMP, 
+      RSP, RZP, RHP, RXP, 
+      LMP, LSP, LZP, LHP, 
+      LXP, RMR, RSR, RZR, 
+      RHR, RXR, LMR, LSR, 
+      LZR, LHR, LXR)
+    values (#{id,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{aliasname,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{idcard,jdbcType=VARCHAR}, 
+      #{birthAddressCode,jdbcType=VARCHAR}, #{birthAddress,jdbcType=VARCHAR}, #{addressCode,jdbcType=VARCHAR}, 
+      #{address,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, #{race,jdbcType=VARCHAR}, 
+      #{criminalRecord,jdbcType=DECIMAL}, #{personid,jdbcType=VARCHAR}, #{personType,jdbcType=VARCHAR}, 
+      #{caseType1,jdbcType=VARCHAR}, #{caseType2,jdbcType=VARCHAR}, #{caseType3,jdbcType=VARCHAR}, 
+      #{printUnitCode,jdbcType=VARCHAR}, #{printUnitName,jdbcType=VARCHAR}, #{printer,jdbcType=VARCHAR}, 
+      #{printdate,jdbcType=VARCHAR}, #{printerTel,jdbcType=VARCHAR}, #{printerIdcard,jdbcType=VARCHAR}, 
+      #{personLevel,jdbcType=DECIMAL}, #{levelId,jdbcType=VARCHAR}, #{rmp,jdbcType=BLOB}, 
+      #{rsp,jdbcType=BLOB}, #{rzp,jdbcType=BLOB}, #{rhp,jdbcType=BLOB}, #{rxp,jdbcType=BLOB}, 
+      #{lmp,jdbcType=BLOB}, #{lsp,jdbcType=BLOB}, #{lzp,jdbcType=BLOB}, #{lhp,jdbcType=BLOB}, 
+      #{lxp,jdbcType=BLOB}, #{rmr,jdbcType=BLOB}, #{rsr,jdbcType=BLOB}, #{rzr,jdbcType=BLOB}, 
+      #{rhr,jdbcType=BLOB}, #{rxr,jdbcType=BLOB}, #{lmr,jdbcType=BLOB}, #{lsr,jdbcType=BLOB}, 
+      #{lzr,jdbcType=BLOB}, #{lhr,jdbcType=BLOB}, #{lxr,jdbcType=BLOB})
+  </insert>
+  <insert id="insertSelective" parameterType="com.egf.statisticsserver.model.oracle.PersonInfoWithBLOBs" >
+    insert into PERSONINFO
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="name != null" >
+        NAME,
+      </if>
+      <if test="aliasname != null" >
+        ALIASNAME,
+      </if>
+      <if test="sex != null" >
+        SEX,
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY,
+      </if>
+      <if test="idcard != null" >
+        IDCARD,
+      </if>
+      <if test="birthAddressCode != null" >
+        BIRTH_ADDRESS_CODE,
+      </if>
+      <if test="birthAddress != null" >
+        BIRTH_ADDRESS,
+      </if>
+      <if test="addressCode != null" >
+        ADDRESS_CODE,
+      </if>
+      <if test="address != null" >
+        ADDRESS,
+      </if>
+      <if test="nation != null" >
+        NATION,
+      </if>
+      <if test="race != null" >
+        RACE,
+      </if>
+      <if test="criminalRecord != null" >
+        CRIMINAL_RECORD,
+      </if>
+      <if test="personid != null" >
+        PERSONID,
+      </if>
+      <if test="personType != null" >
+        PERSON_TYPE,
+      </if>
+      <if test="caseType1 != null" >
+        CASE_TYPE1,
+      </if>
+      <if test="caseType2 != null" >
+        CASE_TYPE2,
+      </if>
+      <if test="caseType3 != null" >
+        CASE_TYPE3,
+      </if>
+      <if test="printUnitCode != null" >
+        PRINT_UNIT_CODE,
+      </if>
+      <if test="printUnitName != null" >
+        PRINT_UNIT_NAME,
+      </if>
+      <if test="printer != null" >
+        PRINTER,
+      </if>
+      <if test="printdate != null" >
+        PRINTDATE,
+      </if>
+      <if test="printerTel != null" >
+        PRINTER_TEL,
+      </if>
+      <if test="printerIdcard != null" >
+        PRINTER_IDCARD,
+      </if>
+      <if test="personLevel != null" >
+        PERSON_LEVEL,
+      </if>
+      <if test="levelId != null" >
+        LEVEL_ID,
+      </if>
+      <if test="rmp != null" >
+        RMP,
+      </if>
+      <if test="rsp != null" >
+        RSP,
+      </if>
+      <if test="rzp != null" >
+        RZP,
+      </if>
+      <if test="rhp != null" >
+        RHP,
+      </if>
+      <if test="rxp != null" >
+        RXP,
+      </if>
+      <if test="lmp != null" >
+        LMP,
+      </if>
+      <if test="lsp != null" >
+        LSP,
+      </if>
+      <if test="lzp != null" >
+        LZP,
+      </if>
+      <if test="lhp != null" >
+        LHP,
+      </if>
+      <if test="lxp != null" >
+        LXP,
+      </if>
+      <if test="rmr != null" >
+        RMR,
+      </if>
+      <if test="rsr != null" >
+        RSR,
+      </if>
+      <if test="rzr != null" >
+        RZR,
+      </if>
+      <if test="rhr != null" >
+        RHR,
+      </if>
+      <if test="rxr != null" >
+        RXR,
+      </if>
+      <if test="lmr != null" >
+        LMR,
+      </if>
+      <if test="lsr != null" >
+        LSR,
+      </if>
+      <if test="lzr != null" >
+        LZR,
+      </if>
+      <if test="lhr != null" >
+        LHR,
+      </if>
+      <if test="lxr != null" >
+        LXR,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="aliasname != null" >
+        #{aliasname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="birthAddressCode != null" >
+        #{birthAddressCode,jdbcType=VARCHAR},
+      </if>
+      <if test="birthAddress != null" >
+        #{birthAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addressCode != null" >
+        #{addressCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="race != null" >
+        #{race,jdbcType=VARCHAR},
+      </if>
+      <if test="criminalRecord != null" >
+        #{criminalRecord,jdbcType=DECIMAL},
+      </if>
+      <if test="personid != null" >
+        #{personid,jdbcType=VARCHAR},
+      </if>
+      <if test="personType != null" >
+        #{personType,jdbcType=VARCHAR},
+      </if>
+      <if test="caseType1 != null" >
+        #{caseType1,jdbcType=VARCHAR},
+      </if>
+      <if test="caseType2 != null" >
+        #{caseType2,jdbcType=VARCHAR},
+      </if>
+      <if test="caseType3 != null" >
+        #{caseType3,jdbcType=VARCHAR},
+      </if>
+      <if test="printUnitCode != null" >
+        #{printUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="printUnitName != null" >
+        #{printUnitName,jdbcType=VARCHAR},
+      </if>
+      <if test="printer != null" >
+        #{printer,jdbcType=VARCHAR},
+      </if>
+      <if test="printdate != null" >
+        #{printdate,jdbcType=VARCHAR},
+      </if>
+      <if test="printerTel != null" >
+        #{printerTel,jdbcType=VARCHAR},
+      </if>
+      <if test="printerIdcard != null" >
+        #{printerIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="personLevel != null" >
+        #{personLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="levelId != null" >
+        #{levelId,jdbcType=VARCHAR},
+      </if>
+      <if test="rmp != null" >
+        #{rmp,jdbcType=BLOB},
+      </if>
+      <if test="rsp != null" >
+        #{rsp,jdbcType=BLOB},
+      </if>
+      <if test="rzp != null" >
+        #{rzp,jdbcType=BLOB},
+      </if>
+      <if test="rhp != null" >
+        #{rhp,jdbcType=BLOB},
+      </if>
+      <if test="rxp != null" >
+        #{rxp,jdbcType=BLOB},
+      </if>
+      <if test="lmp != null" >
+        #{lmp,jdbcType=BLOB},
+      </if>
+      <if test="lsp != null" >
+        #{lsp,jdbcType=BLOB},
+      </if>
+      <if test="lzp != null" >
+        #{lzp,jdbcType=BLOB},
+      </if>
+      <if test="lhp != null" >
+        #{lhp,jdbcType=BLOB},
+      </if>
+      <if test="lxp != null" >
+        #{lxp,jdbcType=BLOB},
+      </if>
+      <if test="rmr != null" >
+        #{rmr,jdbcType=BLOB},
+      </if>
+      <if test="rsr != null" >
+        #{rsr,jdbcType=BLOB},
+      </if>
+      <if test="rzr != null" >
+        #{rzr,jdbcType=BLOB},
+      </if>
+      <if test="rhr != null" >
+        #{rhr,jdbcType=BLOB},
+      </if>
+      <if test="rxr != null" >
+        #{rxr,jdbcType=BLOB},
+      </if>
+      <if test="lmr != null" >
+        #{lmr,jdbcType=BLOB},
+      </if>
+      <if test="lsr != null" >
+        #{lsr,jdbcType=BLOB},
+      </if>
+      <if test="lzr != null" >
+        #{lzr,jdbcType=BLOB},
+      </if>
+      <if test="lhr != null" >
+        #{lhr,jdbcType=BLOB},
+      </if>
+      <if test="lxr != null" >
+        #{lxr,jdbcType=BLOB},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.egf.statisticsserver.model.oracle.PersonInfoWithBLOBs" >
+    update PERSONINFO
+    <set >
+      <if test="name != null" >
+        NAME = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="aliasname != null" >
+        ALIASNAME = #{aliasname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        SEX = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        BIRTHDAY = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="idcard != null" >
+        IDCARD = #{idcard,jdbcType=VARCHAR},
+      </if>
+      <if test="birthAddressCode != null" >
+        BIRTH_ADDRESS_CODE = #{birthAddressCode,jdbcType=VARCHAR},
+      </if>
+      <if test="birthAddress != null" >
+        BIRTH_ADDRESS = #{birthAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="addressCode != null" >
+        ADDRESS_CODE = #{addressCode,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        ADDRESS = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        NATION = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="race != null" >
+        RACE = #{race,jdbcType=VARCHAR},
+      </if>
+      <if test="criminalRecord != null" >
+        CRIMINAL_RECORD = #{criminalRecord,jdbcType=DECIMAL},
+      </if>
+      <if test="personid != null" >
+        PERSONID = #{personid,jdbcType=VARCHAR},
+      </if>
+      <if test="personType != null" >
+        PERSON_TYPE = #{personType,jdbcType=VARCHAR},
+      </if>
+      <if test="caseType1 != null" >
+        CASE_TYPE1 = #{caseType1,jdbcType=VARCHAR},
+      </if>
+      <if test="caseType2 != null" >
+        CASE_TYPE2 = #{caseType2,jdbcType=VARCHAR},
+      </if>
+      <if test="caseType3 != null" >
+        CASE_TYPE3 = #{caseType3,jdbcType=VARCHAR},
+      </if>
+      <if test="printUnitCode != null" >
+        PRINT_UNIT_CODE = #{printUnitCode,jdbcType=VARCHAR},
+      </if>
+      <if test="printUnitName != null" >
+        PRINT_UNIT_NAME = #{printUnitName,jdbcType=VARCHAR},
+      </if>
+      <if test="printer != null" >
+        PRINTER = #{printer,jdbcType=VARCHAR},
+      </if>
+      <if test="printdate != null" >
+        PRINTDATE = #{printdate,jdbcType=VARCHAR},
+      </if>
+      <if test="printerTel != null" >
+        PRINTER_TEL = #{printerTel,jdbcType=VARCHAR},
+      </if>
+      <if test="printerIdcard != null" >
+        PRINTER_IDCARD = #{printerIdcard,jdbcType=VARCHAR},
+      </if>
+      <if test="personLevel != null" >
+        PERSON_LEVEL = #{personLevel,jdbcType=DECIMAL},
+      </if>
+      <if test="levelId != null" >
+        LEVEL_ID = #{levelId,jdbcType=VARCHAR},
+      </if>
+      <if test="rmp != null" >
+        RMP = #{rmp,jdbcType=BLOB},
+      </if>
+      <if test="rsp != null" >
+        RSP = #{rsp,jdbcType=BLOB},
+      </if>
+      <if test="rzp != null" >
+        RZP = #{rzp,jdbcType=BLOB},
+      </if>
+      <if test="rhp != null" >
+        RHP = #{rhp,jdbcType=BLOB},
+      </if>
+      <if test="rxp != null" >
+        RXP = #{rxp,jdbcType=BLOB},
+      </if>
+      <if test="lmp != null" >
+        LMP = #{lmp,jdbcType=BLOB},
+      </if>
+      <if test="lsp != null" >
+        LSP = #{lsp,jdbcType=BLOB},
+      </if>
+      <if test="lzp != null" >
+        LZP = #{lzp,jdbcType=BLOB},
+      </if>
+      <if test="lhp != null" >
+        LHP = #{lhp,jdbcType=BLOB},
+      </if>
+      <if test="lxp != null" >
+        LXP = #{lxp,jdbcType=BLOB},
+      </if>
+      <if test="rmr != null" >
+        RMR = #{rmr,jdbcType=BLOB},
+      </if>
+      <if test="rsr != null" >
+        RSR = #{rsr,jdbcType=BLOB},
+      </if>
+      <if test="rzr != null" >
+        RZR = #{rzr,jdbcType=BLOB},
+      </if>
+      <if test="rhr != null" >
+        RHR = #{rhr,jdbcType=BLOB},
+      </if>
+      <if test="rxr != null" >
+        RXR = #{rxr,jdbcType=BLOB},
+      </if>
+      <if test="lmr != null" >
+        LMR = #{lmr,jdbcType=BLOB},
+      </if>
+      <if test="lsr != null" >
+        LSR = #{lsr,jdbcType=BLOB},
+      </if>
+      <if test="lzr != null" >
+        LZR = #{lzr,jdbcType=BLOB},
+      </if>
+      <if test="lhr != null" >
+        LHR = #{lhr,jdbcType=BLOB},
+      </if>
+      <if test="lxr != null" >
+        LXR = #{lxr,jdbcType=BLOB},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.egf.statisticsserver.model.oracle.PersonInfoWithBLOBs" >
+    update PERSONINFO
+    set NAME = #{name,jdbcType=VARCHAR},
+      ALIASNAME = #{aliasname,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=VARCHAR},
+      BIRTHDAY = #{birthday,jdbcType=VARCHAR},
+      IDCARD = #{idcard,jdbcType=VARCHAR},
+      BIRTH_ADDRESS_CODE = #{birthAddressCode,jdbcType=VARCHAR},
+      BIRTH_ADDRESS = #{birthAddress,jdbcType=VARCHAR},
+      ADDRESS_CODE = #{addressCode,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      NATION = #{nation,jdbcType=VARCHAR},
+      RACE = #{race,jdbcType=VARCHAR},
+      CRIMINAL_RECORD = #{criminalRecord,jdbcType=DECIMAL},
+      PERSONID = #{personid,jdbcType=VARCHAR},
+      PERSON_TYPE = #{personType,jdbcType=VARCHAR},
+      CASE_TYPE1 = #{caseType1,jdbcType=VARCHAR},
+      CASE_TYPE2 = #{caseType2,jdbcType=VARCHAR},
+      CASE_TYPE3 = #{caseType3,jdbcType=VARCHAR},
+      PRINT_UNIT_CODE = #{printUnitCode,jdbcType=VARCHAR},
+      PRINT_UNIT_NAME = #{printUnitName,jdbcType=VARCHAR},
+      PRINTER = #{printer,jdbcType=VARCHAR},
+      PRINTDATE = #{printdate,jdbcType=VARCHAR},
+      PRINTER_TEL = #{printerTel,jdbcType=VARCHAR},
+      PRINTER_IDCARD = #{printerIdcard,jdbcType=VARCHAR},
+      PERSON_LEVEL = #{personLevel,jdbcType=DECIMAL},
+      LEVEL_ID = #{levelId,jdbcType=VARCHAR},
+      RMP = #{rmp,jdbcType=BLOB},
+      RSP = #{rsp,jdbcType=BLOB},
+      RZP = #{rzp,jdbcType=BLOB},
+      RHP = #{rhp,jdbcType=BLOB},
+      RXP = #{rxp,jdbcType=BLOB},
+      LMP = #{lmp,jdbcType=BLOB},
+      LSP = #{lsp,jdbcType=BLOB},
+      LZP = #{lzp,jdbcType=BLOB},
+      LHP = #{lhp,jdbcType=BLOB},
+      LXP = #{lxp,jdbcType=BLOB},
+      RMR = #{rmr,jdbcType=BLOB},
+      RSR = #{rsr,jdbcType=BLOB},
+      RZR = #{rzr,jdbcType=BLOB},
+      RHR = #{rhr,jdbcType=BLOB},
+      RXR = #{rxr,jdbcType=BLOB},
+      LMR = #{lmr,jdbcType=BLOB},
+      LSR = #{lsr,jdbcType=BLOB},
+      LZR = #{lzr,jdbcType=BLOB},
+      LHR = #{lhr,jdbcType=BLOB},
+      LXR = #{lxr,jdbcType=BLOB}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.egf.statisticsserver.model.oracle.PersonInfo" >
+    update PERSONINFO
+    set NAME = #{name,jdbcType=VARCHAR},
+      ALIASNAME = #{aliasname,jdbcType=VARCHAR},
+      SEX = #{sex,jdbcType=VARCHAR},
+      BIRTHDAY = #{birthday,jdbcType=VARCHAR},
+      IDCARD = #{idcard,jdbcType=VARCHAR},
+      BIRTH_ADDRESS_CODE = #{birthAddressCode,jdbcType=VARCHAR},
+      BIRTH_ADDRESS = #{birthAddress,jdbcType=VARCHAR},
+      ADDRESS_CODE = #{addressCode,jdbcType=VARCHAR},
+      ADDRESS = #{address,jdbcType=VARCHAR},
+      NATION = #{nation,jdbcType=VARCHAR},
+      RACE = #{race,jdbcType=VARCHAR},
+      CRIMINAL_RECORD = #{criminalRecord,jdbcType=DECIMAL},
+      PERSONID = #{personid,jdbcType=VARCHAR},
+      PERSON_TYPE = #{personType,jdbcType=VARCHAR},
+      CASE_TYPE1 = #{caseType1,jdbcType=VARCHAR},
+      CASE_TYPE2 = #{caseType2,jdbcType=VARCHAR},
+      CASE_TYPE3 = #{caseType3,jdbcType=VARCHAR},
+      PRINT_UNIT_CODE = #{printUnitCode,jdbcType=VARCHAR},
+      PRINT_UNIT_NAME = #{printUnitName,jdbcType=VARCHAR},
+      PRINTER = #{printer,jdbcType=VARCHAR},
+      PRINTDATE = #{printdate,jdbcType=VARCHAR},
+      PRINTER_TEL = #{printerTel,jdbcType=VARCHAR},
+      PRINTER_IDCARD = #{printerIdcard,jdbcType=VARCHAR},
+      PERSON_LEVEL = #{personLevel,jdbcType=DECIMAL},
+      LEVEL_ID = #{levelId,jdbcType=VARCHAR}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
